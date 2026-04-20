@@ -1,15 +1,18 @@
+"use server"
 import SinglePost from "@/app/_apiReqest/Singlepost";
 import Image from "next/image";
 import React from "react";
 
 import ProductImages from "./ProductImages";
-import ParamsType from "./../../types/Params.type";
+import ParamsType from "../../_types/Params.type";
+import BtnAddCartItem from "@/app/_componantes/BtnCartActions/BtnAddCartItem";
 export default async function ProductDetails({ params }: ParamsType) {
-  let { id } = params;
+  let { id } =await  params;
   let product = await SinglePost(id);
+console.log(product);
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="max-w-7xl mx-auto p-6 my-10">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         <ProductImages
           imageCover={product.imageCover}
@@ -68,13 +71,11 @@ export default async function ProductDetails({ params }: ParamsType) {
             {product.description}
           </p>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col gap-3">
             <button className="bg-black text-white py-2 px-6 rounded-lg hover:bg-gray-800 transition">
-              Add to Cart
-            </button>
-            <button className="border border-gray-300 py-2 px-6 rounded-lg hover:bg-gray-100 transition">
               Buy Now
             </button>
+            <BtnAddCartItem id= {product.id} />
           </div>
         </div>
       </div>

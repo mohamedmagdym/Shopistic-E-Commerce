@@ -31,4 +31,9 @@ export interface Brand {
   slug: string
   image: string
 }
-
+export interface CartItem {
+  _id: string;
+  count: number;
+  price: number;
+  product: Product;
+}

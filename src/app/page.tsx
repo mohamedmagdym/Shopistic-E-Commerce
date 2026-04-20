@@ -1,16 +1,17 @@
+"use server"
 import GetAllCategory from "@/app/_apiReqest/Category";
 import Category_sweper from "./_componantes/category_sweber/Category_sweper";
 import AllPostsComponantes from "./_componantes/allPosts/AllPosts";
+import SwiperImage from "./_componantes/swiperImage/SwiperImage";
+import { GetBrands } from "./_apiReqest/Brands";
 export default async function Home() {
-  const categories = await GetAllCategory();
-
+  let categories = await GetAllCategory();
+  let brands = await GetBrands();
   return (
-    <>
+    <div className=" ">
+      <SwiperImage brands={brands} />
       <Category_sweper categories={categories} />
-      <h2 className="text-3xl font-bold text-center text-gray-800 my-4">
-        show all products
-      </h2>
-      <AllPostsComponantes/>
-    </>
+      <AllPostsComponantes />
+    </div>
   );
 }
