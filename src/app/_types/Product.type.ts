@@ -1,3 +1,5 @@
+import Category from "./Category"
+
 export interface Product {
   sold: number
   images: string[]
