@@ -42,12 +42,15 @@ const faqs = [
   },
 ];
  
+// ✅ FIX: added onClick to props so the Send button actually works
 function MagneticButton({
   children,
   className,
+  onClick,
 }: {
   children: React.ReactNode;
   className?: string;
+  onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
 }) {
   const ref = useRef<HTMLButtonElement>(null);
  
@@ -61,8 +64,7 @@ function MagneticButton({
   };
  
   const handleMouseLeave = () => {
-    if (ref.current)
-      ref.current.style.transform = "translate(0px, 0px)";
+    if (ref.current) ref.current.style.transform = "translate(0px, 0px)";
   };
  
   return (
@@ -70,6 +72,7 @@ function MagneticButton({
       ref={ref}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onClick={onClick}
       className={className}
       style={{ transition: "transform 0.2s cubic-bezier(0.23,1,0.32,1)" }}
     >
@@ -93,7 +96,8 @@ export default function Contact() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => setForm({ ...form, [e.target.name]: e.target.value });
  
-  const handleSubmit = (e: React.MouseEvent) => {
+  // ✅ FIX: correct event type matching MagneticButton's onClick signature
+  const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (form.name && form.email && form.message) setSent(true);
   };
@@ -105,7 +109,6 @@ export default function Contact() {
     >
       {/* ══ HERO STRIP ══ */}
       <section className="relative bg-[#0f1729] overflow-hidden">
-        {/* animated diagonal lines */}
         <div className="absolute inset-0 overflow-hidden">
           {[...Array(8)].map((_, i) => (
             <div
@@ -116,12 +119,10 @@ export default function Contact() {
                 left: "-10%",
                 right: "-10%",
                 transform: `rotate(-8deg)`,
-                animationDelay: `${i * 0.3}s`,
               }}
             />
           ))}
         </div>
-        {/* noise blob */}
         <div className="absolute right-0 top-0 w-[500px] h-[500px] bg-[#e8a020] opacity-5 rounded-full blur-[140px]" />
         <div className="absolute left-[-100px] bottom-[-100px] w-[400px] h-[400px] bg-[#3b5bdb] opacity-10 rounded-full blur-[120px]" />
  
@@ -140,8 +141,9 @@ export default function Contact() {
                 letterSpacing: "-0.04em",
               }}
             >
-              Let's
+              Let&apos;s
               <br />
+              {/* ✅ FIX: escaped apostrophe for Next.js */}
               <span
                 className="text-[#e8a020]"
                 style={{ WebkitTextStroke: "2px #e8a020", color: "transparent" }}
@@ -154,12 +156,11 @@ export default function Contact() {
             className="text-gray-400 text-lg max-w-sm leading-relaxed mb-2"
             style={{ fontFamily: "'Arial', sans-serif", fontWeight: 300 }}
           >
-            Whether it's a question about your order, a partnership idea, or
-            just saying hello — we're all ears.
+            Whether it&apos;s a question about your order, a partnership idea, or
+            just saying hello — we&apos;re all ears.
           </p>
         </div>
  
-        {/* bottom ticker */}
         <div className="border-t border-white/5 overflow-hidden">
           <div
             className="flex gap-12 py-3 text-white/20 text-sm uppercase tracking-widest whitespace-nowrap"
@@ -194,7 +195,6 @@ export default function Contact() {
  
         {/* ── FORM SIDE ── */}
         <div className="bg-white rounded-3xl p-10 md:p-14 shadow-xl relative overflow-hidden">
-          {/* corner accent */}
           <div className="absolute top-0 right-0 w-40 h-40 bg-[#e8a020]/8 rounded-bl-[80px]" />
           <div className="absolute top-4 right-4 w-3 h-3 bg-[#e8a020] rounded-full" />
  
@@ -210,11 +210,10 @@ export default function Contact() {
                 className="text-gray-400 mb-10 text-sm"
                 style={{ fontFamily: "'Arial', sans-serif" }}
               >
-                Fill in the form — we'll get back to you within 24 hours.
+                Fill in the form — we&apos;ll get back to you within 24 hours.
               </p>
  
               <div className="grid md:grid-cols-2 gap-5 mb-5">
-                {/* Name */}
                 <div className="relative">
                   <label
                     className={`absolute left-4 transition-all duration-200 pointer-events-none text-sm ${
@@ -237,7 +236,6 @@ export default function Contact() {
                   />
                 </div>
  
-                {/* Email */}
                 <div className="relative">
                   <label
                     className={`absolute left-4 transition-all duration-200 pointer-events-none text-sm ${
@@ -261,7 +259,6 @@ export default function Contact() {
                 </div>
               </div>
  
-              {/* Subject dropdown */}
               <div className="relative mb-5">
                 <select
                   name="subject"
@@ -272,7 +269,8 @@ export default function Contact() {
                 >
                   <option value="">Select a topic…</option>
                   <option>Order Issue</option>
-                  <option>Return & Refund</option>
+                  <option>Return &amp; Refund</option>
+                  {/* ✅ FIX: & escaped as &amp; */}
                   <option>Product Question</option>
                   <option>Partnership</option>
                   <option>Other</option>
@@ -282,7 +280,6 @@ export default function Contact() {
                 </div>
               </div>
  
-              {/* Message */}
               <div className="relative mb-8">
                 <label
                   className={`absolute left-4 transition-all duration-200 pointer-events-none text-sm ${
@@ -319,7 +316,6 @@ export default function Contact() {
               </MagneticButton>
             </>
           ) : (
-            /* ── SUCCESS STATE ── */
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <div className="w-20 h-20 rounded-full bg-[#e8a020]/15 flex items-center justify-center mb-6 text-4xl">
                 ✓
@@ -334,7 +330,7 @@ export default function Contact() {
                 className="text-gray-500 text-base max-w-xs leading-relaxed mb-8"
                 style={{ fontFamily: "'Arial', sans-serif" }}
               >
-                Thanks {form.name}! We'll be in touch at{" "}
+                Thanks {form.name}! We&apos;ll be in touch at{" "}
                 <span className="text-[#e8a020]">{form.email}</span> within 24
                 hours.
               </p>
@@ -354,7 +350,6 @@ export default function Contact() {
  
         {/* ── INFO SIDE ── */}
         <div className="flex flex-col gap-6">
-          {/* contact cards */}
           {contactMethods.map((c, i) => (
             <div
               key={i}
@@ -384,7 +379,6 @@ export default function Contact() {
             </div>
           ))}
  
-          {/* response time badge */}
           <div className="bg-[#e8a020] rounded-2xl p-7 relative overflow-hidden">
             <div className="absolute top-[-20px] right-[-20px] w-32 h-32 bg-white opacity-10 rounded-full" />
             <p
@@ -432,7 +426,7 @@ export default function Contact() {
             className="text-gray-400 max-w-sm md:mb-2 text-sm leading-relaxed"
             style={{ fontFamily: "'Arial', sans-serif" }}
           >
-            Can't find what you're looking for? Use the form above — we'll answer anything.
+            Can&apos;t find what you&apos;re looking for? Use the form above — we&apos;ll answer anything.
           </p>
         </div>
  
@@ -480,9 +474,10 @@ export default function Contact() {
         </div>
       </section>
  
-      {/* ══ BOTTOM MAP STRIP ══ */}
+      {/* ══ BOTTOM STRIP ══ */}
       <section className="bg-[#0f1729] py-16 px-6 text-center relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5"
+        <div
+          className="absolute inset-0 opacity-5"
           style={{
             backgroundImage: "radial-gradient(circle, #e8a020 1px, transparent 1px)",
             backgroundSize: "32px 32px",
@@ -505,11 +500,10 @@ export default function Contact() {
             className="text-gray-500 text-sm"
             style={{ fontFamily: "'Arial', sans-serif" }}
           >
-            New Cairo, 5th Settlement — shipping across Egypt & beyond
+            New Cairo, 5th Settlement — shipping across Egypt &amp; beyond
           </p>
         </div>
       </section>
     </main>
   );
 }
- 
